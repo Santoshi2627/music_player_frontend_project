@@ -12,7 +12,7 @@ const Display = () => {
   const { theme } = useTheme(); 
 
   return (
-    <div className="m-2 mb-36 px-6 pt-4 rounded  overflow-auto lg:w-[100%] lg:ml-0"style={{
+    <div className="m-2 mb-32 px-6 pt-4 rounded  overflow-auto lg:w-[100%] lg:ml-0"style={{
       backgroundColor: theme === "dark" ? "black" : "white",
       color: theme === "dark" ? "white" : "black",
     }} id="Home">
