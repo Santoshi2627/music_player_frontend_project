@@ -2,24 +2,16 @@ import { doc, getDoc } from "firebase/firestore";
 import { create } from "zustand";
 import { database } from "../components/firebasesetup";
 
-export const useUserStore = create((set, get) => ({
+export const useUserStore = create((set) => ({
   currentUser: null,
   isLoading: false,
-  error: null,
-
   fetchUserInfo: async (uid) => {
     if (!uid) {
       console.log("No UID provided, resetting state.");
-      return set({ currentUser: null, isLoading: false, error: null });
+      return set({ currentUser: null, isLoading: false });
     }
 
-    // Prevent unnecessary re-fetching if data already exists
-    if (get().currentUser?.uid === uid) {
-      console.log("User data already fetched.");
-      return;
-    }
-
-    set({ isLoading: true, error: null });
+    set({ isLoading: true }); 
 
     try {
       const docRef = doc(database, "usersdetails", uid);
@@ -27,16 +19,14 @@ export const useUserStore = create((set, get) => ({
 
       if (docSnap.exists()) {
         console.log("User found:", docSnap.data());
-        set({ currentUser: { uid, ...docSnap.data() }, isLoading: false });
+        set({ currentUser: docSnap.data(), isLoading: false });
       } else {
         console.log("User document does not exist.");
-        set({ currentUser: null, isLoading: false, error: "User not found" });
+        set({ currentUser: null, isLoading: false });
       }
     } catch (err) {
       console.error("Error fetching user:", err);
-      set({ currentUser: null, isLoading: false, error: err.message });
+      set({ currentUser: null, isLoading: false });
     }
   },
-
-  clearUserInfo: () => set({ currentUser: null, isLoading: false, error: null }),
 }));
